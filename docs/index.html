@@ -232,8 +232,9 @@
     statusEl.className = "status";
 
     try {
-      const res = await fetch(GAS_URL, {
+      await fetch(GAS_URL, {
         method: "POST",
+        mode: "no-cors",
         body: new URLSearchParams({
           requesterName,
           requesterOrg,
@@ -241,13 +242,8 @@
           lineDisplayName
         })
       });
-      const data = await res.json();
-      if (data.ok) {
-        document.getElementById("form-section").style.display = "none";
-        document.getElementById("done-section").style.display = "block";
-      } else {
-        throw new Error(data.error || "เกิดข้อผิดพลาด");
-      }
+      document.getElementById("form-section").style.display = "none";
+      document.getElementById("done-section").style.display = "block";
     } catch (e) {
       statusEl.textContent = "ผิดพลาด: " + e.message;
       statusEl.className = "status error";
