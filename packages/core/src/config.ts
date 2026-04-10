@@ -23,7 +23,8 @@ const schema = z.object({
   CUSTOMER_NOTIFY_ENABLED: z.string().default("true"),
   REQUEST_TRIGGER_STATUSES: z.string().default("1"),
   RESULT_TRIGGER_STATUSES: z.string().default("8"),
-  ADMIN_STAFF_GROUP_ID: z.string().optional().default("")
+  ADMIN_STAFF_GROUP_ID: z.string().optional().default(""),
+  CUSTOMER_NOTIFY_OVERRIDE_USER_ID: z.string().optional().default("")
 });
 
 const parsed = schema.parse(process.env);
@@ -70,5 +71,6 @@ export const appConfig = {
   customerNotifyEnabled: parsed.CUSTOMER_NOTIFY_ENABLED === "true",
   requestTriggerStatuses: parseCsv(parsed.REQUEST_TRIGGER_STATUSES),
   resultTriggerStatuses: parseCsv(parsed.RESULT_TRIGGER_STATUSES),
-  adminStaffGroupId: parsed.ADMIN_STAFF_GROUP_ID
+  adminStaffGroupId: parsed.ADMIN_STAFF_GROUP_ID,
+  customerNotifyOverrideUserId: parsed.CUSTOMER_NOTIFY_OVERRIDE_USER_ID
 } as const;

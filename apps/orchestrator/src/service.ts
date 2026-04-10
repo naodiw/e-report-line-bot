@@ -54,35 +54,42 @@ export class NotificationOrchestrator {
     const byUserAndFactory = new Map<string, { target: NotificationTarget; events: NotificationEvent[] }>();
 
     for (const event of events) {
-      const reportName = (event.requesterName ?? "").replace(/^(นางสาว|นาง|นาย)\s*/, "").trim();
-      const activeRows = customerMap.filter((row) => row.active);
-      const exactMatch = activeRows.find((row) => row.requesterName.trim() === reportName);
-      const mapping = exactMatch ?? (() => {
-        let best: typeof activeRows[0] | undefined;
-        let bestDist = 4;
-        for (const row of activeRows) {
-          const d = levenshtein(row.requesterName.trim(), reportName);
-          if (d < bestDist) { bestDist = d; best = row; }
-        }
-        return best;
-      })();
+      const overrideUserId = appConfig.customerNotifyOverrideUserId;
+      let resolvedUserId: string;
+      if (overrideUserId) {
+        resolvedUserId = overrideUserId;
+      } else {
+        const reportName = (event.requesterName ?? "").replace(/^(นางสาว|นาง|นาย)\s*/, "").trim();
+        const activeRows = customerMap.filter((row) => row.active);
+        const exactMatch = activeRows.find((row) => row.requesterName.trim() === reportName);
+        const mapping = exactMatch ?? (() => {
+          let best: typeof activeRows[0] | undefined;
+          let bestDist = 4;
+          for (const row of activeRows) {
+            const d = levenshtein(row.requesterName.trim(), reportName);
+            if (d < bestDist) { bestDist = d; best = row; }
+          }
+          return best;
+        })();
 
-      if (!mapping?.lineUserId) {
-        logger.warn("Customer LINE mapping not found", {
-          requestNo: event.requestNo,
-          requesterName: event.requesterName,
-          requesterOrg: event.requesterOrg
-        });
-        await this.sheets.markPendingMap(event);
-        continue;
+        if (!mapping?.lineUserId) {
+          logger.warn("Customer LINE mapping not found", {
+            requestNo: event.requestNo,
+            requesterName: event.requesterName,
+            requesterOrg: event.requesterOrg
+          });
+          await this.sheets.markPendingMap(event);
+          continue;
+        }
+        resolvedUserId = mapping.lineUserId;
       }
 
-      const key = `${mapping.lineUserId}::${event.customerName ?? ""}`;
+      const key = `${resolvedUserId}::${event.customerName ?? ""}`;
       if (!byUserAndFactory.has(key)) {
         byUserAndFactory.set(key, {
           target: {
             type: "user",
-            userId: mapping.lineUserId,
+            userId: resolvedUserId,
             groupId: null,
             enabled: true,
             name: mapping.lineDisplayName || mapping.requesterName,
