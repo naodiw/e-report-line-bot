@@ -8,12 +8,10 @@ const SHEET_NAME = "customer_line_map";
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
-
-    const requesterName   = (data.requesterName   || "").trim();
-    const requesterOrg    = (data.requesterOrg    || "").trim();
-    const lineUserId      = (data.lineUserId      || "").trim();
-    const lineDisplayName = (data.lineDisplayName || "").trim();
+    const requesterName   = (e.parameter.requesterName   || "").trim();
+    const requesterOrg    = (e.parameter.requesterOrg    || "").trim();
+    const lineUserId      = (e.parameter.lineUserId      || "").trim();
+    const lineDisplayName = (e.parameter.lineDisplayName || "").trim();
 
     if (!requesterName || !lineUserId) {
       return jsonResponse({ ok: false, error: "Missing required fields" });
