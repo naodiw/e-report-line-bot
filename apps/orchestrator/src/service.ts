@@ -54,11 +54,10 @@ export class NotificationOrchestrator {
     const byUserAndFactory = new Map<string, { target: NotificationTarget; events: NotificationEvent[] }>();
 
     for (const event of events) {
-      const mapping = customerMap.find((row) => {
-        const sameName = row.requesterName.trim() === (event.requesterName ?? "").trim();
-        const sameOrg = row.requesterOrg.trim() === (event.requesterOrg ?? "").trim();
-        return row.active && sameName && sameOrg;
-      });
+      const reportName = (event.requesterName ?? "").replace(/^(นางสาว|นาง|นาย)\s*/, "").trim();
+      const mapping = customerMap.find((row) =>
+        row.active && row.requesterName.trim() === reportName
+      );
 
       if (!mapping?.lineUserId) {
         logger.warn("Customer LINE mapping not found", {
