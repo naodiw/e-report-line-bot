@@ -3,7 +3,7 @@
 //
 // Set SPREADSHEET_ID below to your Google Sheets ID
 
-const SPREADSHEET_ID = "@@SPREADSHEET_ID@@";
+const SPREADSHEET_ID = "1hc7BlsZ4h9pK-GtJeQNG5yK3o1_TvgktDXWnYljRsU8";
 const SHEET_NAME = "customer_line_map";
 
 function doPost(e) {
