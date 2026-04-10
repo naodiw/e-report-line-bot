@@ -148,10 +148,29 @@
     </div>
 
     <label for="requester-name">ชื่อ-นามสกุล (ตามที่ยื่นใน E-Report)</label>
-    <input type="text" id="requester-name" placeholder="เช่น นายสมชาย ใจดี" />
+    <input type="text" id="requester-name" placeholder="เช่น สมชาย ใจดี" />
+    <p style="font-size:12px;color:#888;margin-top:-14px;margin-bottom:18px;">ไม่ต้องใส่คำนำหน้า เช่น นาย / นาง / นางสาว</p>
 
-    <label for="requester-org">หน่วยงาน</label>
-    <input type="text" id="requester-org" placeholder="เช่น กรมพัฒนาที่ดิน" />
+    <label for="requester-org">จังหวัด</label>
+    <select id="requester-org" style="width:100%;padding:12px 14px;border:1.5px solid #e0e0e0;border-radius:10px;font-size:15px;outline:none;margin-bottom:18px;background:white;color:#333;">
+      <option value="">-- เลือกจังหวัด --</option>
+      <option>กำแพงเพชร</option>
+      <option>เชียงราย</option>
+      <option>เชียงใหม่</option>
+      <option>ตาก</option>
+      <option>น่าน</option>
+      <option>นครสวรรค์</option>
+      <option>พะเยา</option>
+      <option>พิจิตร</option>
+      <option>พิษณุโลก</option>
+      <option>เพชรบูรณ์</option>
+      <option>แพร่</option>
+      <option>แม่ฮ่องสอน</option>
+      <option>ลำปาง</option>
+      <option>ลำพูน</option>
+      <option>สุโขทัย</option>
+      <option>อุตรดิตถ์</option>
+    </select>
 
     <button id="submit-btn" onclick="submitForm()">ลงทะเบียน</button>
     <div class="status" id="status"></div>
