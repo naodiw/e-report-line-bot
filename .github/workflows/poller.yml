@@ -1,0 +1,40 @@
+name: Poller
+
+on:
+  schedule:
+    - cron: "0 * * * *" # every hour
+  workflow_dispatch: # allow manual run
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Run poller
+        env:
+          NODE_ENV: production
+          TZ: Asia/Bangkok
+          E_REPORT_BASE_URL: ${{ secrets.E_REPORT_BASE_URL }}
+          E_REPORT_USERNAME: ${{ secrets.E_REPORT_USERNAME }}
+          E_REPORT_PASSWORD: ${{ secrets.E_REPORT_PASSWORD }}
+          LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+          LINE_CHANNEL_SECRET: ${{ secrets.LINE_CHANNEL_SECRET }}
+          GOOGLE_SHEETS_SPREADSHEET_ID: ${{ secrets.GOOGLE_SHEETS_SPREADSHEET_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          REQUEST_TRIGGER_STATUSES: ${{ secrets.REQUEST_TRIGGER_STATUSES }}
+          RESULT_TRIGGER_STATUSES: ${{ secrets.RESULT_TRIGGER_STATUSES }}
+          STAFF_NOTIFY_ENABLED: ${{ secrets.STAFF_NOTIFY_ENABLED }}
+          CUSTOMER_NOTIFY_ENABLED: ${{ secrets.CUSTOMER_NOTIFY_ENABLED }}
+        run: node dist/apps/poller/src/index.js
