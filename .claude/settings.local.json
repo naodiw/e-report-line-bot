@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:e-report.diw.go.th)",
+      "WebSearch",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(ngrok version:*)",
+      "Bash(node dist/apps/line-bot/src/index.js)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(npx --yes localtunnel --port 3010)",
+      "Bash(echo \"Tunnel PID: $!\")",
+      "Bash(winget install:*)",
+      "Bash(ssh -o StrictHostKeyChecking=no -R 80:localhost:3010 serveo.net)",
+      "Bash(echo \"Serveo PID: $!\")",
+      "Bash(curl -L \"https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip\" -o /tmp/ngrok.zip)",
+      "Bash(unzip -o ngrok.zip -d ngrok_bin)",
+      "Bash(curl -L \"https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe\" -o /tmp/cloudflared.exe)",
+      "Bash(/tmp/cloudflared.exe tunnel:*)",
+      "Bash(echo \"PID: $!\" sleep 8)",
+      "Bash(node dist/apps/poller/src/index.js)"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/line-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/apps/line-bot/src/index.js",
+  "types": "../../../dist/apps/line-bot/src/index.d.ts"
+}

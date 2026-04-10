@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/connectors",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/packages/connectors/src/index.js",
+  "types": "../../../dist/packages/connectors/src/index.d.ts"
+}

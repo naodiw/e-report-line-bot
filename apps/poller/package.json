@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/poller",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/apps/poller/src/index.js",
+  "types": "../../../dist/apps/poller/src/index.d.ts"
+}

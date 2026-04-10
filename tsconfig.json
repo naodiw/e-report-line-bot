@@ -1,0 +1,12 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/logging" },
+    { "path": "./packages/connectors" },
+    { "path": "./packages/sheets" },
+    { "path": "./apps/orchestrator" },
+    { "path": "./apps/poller" },
+    { "path": "./apps/line-bot" }
+  ]
+}

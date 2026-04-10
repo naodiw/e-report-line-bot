@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/sheets",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/packages/sheets/src/index.js",
+  "types": "../../../dist/packages/sheets/src/index.d.ts"
+}

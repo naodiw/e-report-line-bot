@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/orchestrator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/apps/orchestrator/src/index.js",
+  "types": "../../../dist/apps/orchestrator/src/index.d.ts"
+}

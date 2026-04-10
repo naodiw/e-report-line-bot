@@ -1,0 +1,8 @@
+{
+  "name": "@ereport/logging",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "../../../dist/packages/logging/src/index.js",
+  "types": "../../../dist/packages/logging/src/index.d.ts"
+}

@@ -1,0 +1,32 @@
+{
+  "name": "e-report-line-notification-system",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "check": "tsc -b --pretty false",
+    "setup:sheets": "node dist/apps/orchestrator/src/setup-sheets.js",
+    "start:poller": "node dist/apps/poller/src/index.js",
+    "start:orchestrator": "node dist/apps/orchestrator/src/index.js",
+    "start:line-bot": "node dist/apps/line-bot/src/index.js"
+  },
+  "dependencies": {
+    "@line/bot-sdk": "^9.7.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "google-auth-library": "^9.15.1",
+    "playwright": "^1.53.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.15.3",
+    "typescript": "^5.8.3"
+  }
+}

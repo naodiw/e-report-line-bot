@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true
+  },
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/connectors" },
+    { "path": "../../packages/sheets" },
+    { "path": "../../packages/logging" },
+    { "path": "../orchestrator" }
+  ],
+  "include": ["src/**/*.ts"]
+}
