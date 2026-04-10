@@ -40,18 +40,8 @@ export class NotificationOrchestrator {
     targets: NotificationTarget[],
     notifiedKeys: Set<string>
   ): Promise<void> {
-    // Group by factory (customerName)
-    const byFactory = new Map<string, NotificationEvent[]>();
-    for (const event of events) {
-      const key = event.customerName ?? "";
-      if (!byFactory.has(key)) byFactory.set(key, []);
-      byFactory.get(key)!.push(event);
-    }
-
-    for (const factoryEvents of byFactory.values()) {
-      for (const target of targets) {
-        await this.sendBatchedToTarget(target, factoryEvents, notifiedKeys);
-      }
+    for (const target of targets) {
+      await this.sendBatchedToTarget(target, events, notifiedKeys);
     }
   }
 

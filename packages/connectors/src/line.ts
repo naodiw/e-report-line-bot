@@ -32,18 +32,27 @@ export class LineDeliveryService {
   }
 
   private buildNewRequestMessage(events: NotificationEvent[]): string {
-    const factoryName = events[0].customerName || "ไม่ระบุโรงงาน";
-    const domain = events[0].payload.domain ?? "-";
-    const lines = [
-      `มีคำร้องใหม่ ${events.length} รายการ`,
-      `โรงงาน: ${factoryName}`,
-      `งาน: ${domain}`,
-      ""
-    ];
+    const byFactory = new Map<string, NotificationEvent[]>();
     for (const e of events) {
-      lines.push(`• ${e.requestNo ?? "-"}  ${e.requesterName ?? "-"}  ${e.requesterOrg ?? "-"}`);
+      const key = e.customerName ?? "";
+      if (!byFactory.has(key)) byFactory.set(key, []);
+      byFactory.get(key)!.push(e);
+    }
+
+    const lines = [`มีคำร้องใหม่`];
+    for (const factoryEvents of byFactory.values()) {
+      const factoryName = this.trimCustomerName(factoryEvents[0].customerName || "ไม่ระบุโรงงาน");
+      const province = this.extractProvince(factoryEvents[0].requesterOrg ?? "");
+      lines.push("", factoryName, `จังหวัด: ${province}`);
+      for (const e of factoryEvents) {
+        lines.push(`• ${e.requesterName ?? "-"}`);
+      }
     }
     return lines.join("\n");
+  }
+
+  private extractProvince(org: string): string {
+    return org.match(/จังหวัด\s*(.+)/)?.[1]?.trim() ?? "-";
   }
 
   private trimCustomerName(raw: string): string {
