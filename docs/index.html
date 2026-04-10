@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ลงทะเบียนรับแจ้งเตือน E-Report</title>
+  <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px 24px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+      background: #06c755;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 28px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 18px;
+      color: #1a1a2e;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+    .profile-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f7f9fc;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 24px;
+    }
+    .profile-box img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .profile-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+    .profile-sub {
+      font-size: 12px;
+      color: #888;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 18px;
+    }
+    input:focus { border-color: #06c755; }
+    input::placeholder { color: #bbb; }
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #06c755;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button:not(:disabled):hover { opacity: 0.9; }
+    .status {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 16px;
+      min-height: 20px;
+      color: #555;
+    }
+    .success { color: #06c755; font-weight: 600; }
+    .error { color: #e53935; }
+    #loading {
+      text-align: center;
+      padding: 40px 0;
+      color: #888;
+      font-size: 14px;
+    }
+    #form-section { display: none; }
+    #done-section {
+      display: none;
+      text-align: center;
+      padding: 20px 0;
+    }
+    #done-section .check { font-size: 56px; margin-bottom: 12px; }
+    #done-section h2 { font-size: 18px; color: #1a1a2e; margin-bottom: 8px; }
+    #done-section p { font-size: 13px; color: #888; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">🔔</div>
+  <h1>ลงทะเบียนรับแจ้งเตือน</h1>
+  <p class="subtitle">E-Report Notification System</p>
+
+  <div id="loading">กำลังโหลด...</div>
+
+  <div id="form-section">
+    <div class="profile-box" id="profile-box">
+      <img id="profile-img" src="" alt="profile" />
+      <div>
+        <div class="profile-name" id="profile-name"></div>
+        <div class="profile-sub">LINE Account</div>
+      </div>
+    </div>
+
+    <label for="requester-name">ชื่อ-นามสกุล (ตามที่ยื่นใน E-Report)</label>
+    <input type="text" id="requester-name" placeholder="เช่น นายสมชาย ใจดี" />
+
+    <label for="requester-org">หน่วยงาน</label>
+    <input type="text" id="requester-org" placeholder="เช่น กรมพัฒนาที่ดิน" />
+
+    <button id="submit-btn" onclick="submitForm()">ลงทะเบียน</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div id="done-section">
+    <div class="check">✅</div>
+    <h2>ลงทะเบียนสำเร็จ!</h2>
+    <p>ระบบจะแจ้งเตือนคุณผ่าน LINE<br>เมื่อผลการทดสอบพร้อมแล้ว</p>
+  </div>
+</div>
+
+<script>
+  const LIFF_ID = "@@LIFF_ID@@";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbw2Wk_PPmbvGeyTCQUOKsInf3arcYBVH2YIf7iYvZ2Ph2gejGy2mEDA8VfEMX3vJMXL/exec";
+
+  let lineUserId = "";
+  let lineDisplayName = "";
+
+  async function init() {
+    try {
+      await liff.init({ liffId: LIFF_ID });
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+      const profile = await liff.getProfile();
+      lineUserId = profile.userId;
+      lineDisplayName = profile.displayName;
+
+      document.getElementById("profile-img").src = profile.pictureUrl || "";
+      document.getElementById("profile-name").textContent = lineDisplayName;
+      document.getElementById("loading").style.display = "none";
+      document.getElementById("form-section").style.display = "block";
+    } catch (e) {
+      document.getElementById("loading").textContent = "เกิดข้อผิดพลาด: " + e.message;
+    }
+  }
+
+  async function submitForm() {
+    const requesterName = document.getElementById("requester-name").value.trim();
+    const requesterOrg = document.getElementById("requester-org").value.trim();
+    const statusEl = document.getElementById("status");
+    const btn = document.getElementById("submit-btn");
+
+    if (!requesterName) {
+      statusEl.textContent = "กรุณากรอกชื่อ-นามสกุล";
+      statusEl.className = "status error";
+      return;
+    }
+    if (!requesterOrg) {
+      statusEl.textContent = "กรุณากรอกหน่วยงาน";
+      statusEl.className = "status error";
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.textContent = "กำลังบันทึก...";
+    statusEl.className = "status";
+
+    try {
+      const res = await fetch(GAS_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          requesterName,
+          requesterOrg,
+          lineUserId,
+          lineDisplayName
+        })
+      });
+      const data = await res.json();
+      if (data.ok) {
+        document.getElementById("form-section").style.display = "none";
+        document.getElementById("done-section").style.display = "block";
+      } else {
+        throw new Error(data.error || "เกิดข้อผิดพลาด");
+      }
+    } catch (e) {
+      statusEl.textContent = "ผิดพลาด: " + e.message;
+      statusEl.className = "status error";
+      btn.disabled = false;
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>
