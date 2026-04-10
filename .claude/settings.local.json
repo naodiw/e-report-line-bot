@@ -18,7 +18,9 @@
       "Bash(curl -L \"https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.exe\" -o /tmp/cloudflared.exe)",
       "Bash(/tmp/cloudflared.exe tunnel:*)",
       "Bash(echo \"PID: $!\" sleep 8)",
-      "Bash(node dist/apps/poller/src/index.js)"
+      "Bash(node dist/apps/poller/src/index.js)",
+      "mcp__c1fc4002-5f49-5f9d-a4e5-93c4ef5d6a75__google_drive_fetch",
+      "Bash(node -e ':*)"
     ]
   }
 }
