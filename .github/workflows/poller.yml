@@ -2,7 +2,8 @@ name: Poller
 
 on:
   schedule:
-    - cron: "0,30 1-9 * * *" # every 30 min, 08:00-16:30 ICT (01:00-09:30 UTC)
+    - cron: "30 1 * * *"     # 08:30 ICT — first run of day
+    - cron: "0,30 2-9 * * *" # every 30 min, 09:00-16:30 ICT (02:00-09:30 UTC)
   workflow_dispatch: # allow manual run
 
 jobs:
