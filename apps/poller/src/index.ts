@@ -14,14 +14,18 @@ const main = async (): Promise<void> => {
 
   const requestRecords = [
     ...(await eReport.fetchNewRequests("water")),
-    ...(await eReport.fetchNewRequests("air"))
+    ...(await eReport.fetchNewRequests("air")),
+    ...(await eReport.fetchNewRequests("soil")),
+    ...(await eReport.fetchNewRequests("sewage"))
   ];
 
   await sheets.bulkUpsertRequestRecords(requestRecords);
 
   const resultRecords = [
     ...(await eReport.fetchCompletedResults("water")),
-    ...(await eReport.fetchCompletedResults("air"))
+    ...(await eReport.fetchCompletedResults("air")),
+    ...(await eReport.fetchCompletedResults("soil")),
+    ...(await eReport.fetchCompletedResults("sewage"))
   ];
 
   await sheets.bulkUpsertResultRecords(resultRecords);

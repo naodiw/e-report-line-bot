@@ -53,6 +53,8 @@ const extractTableById = (html: string, tableId: string): string => {
 
 const getCurrentBuddhistYear = (): string => String(new Date().getFullYear() + 543);
 
+const EXCLUDED_ORGS = ["ศูนย์วิจัยและเตือนภัยมลพิษโรงงานภาคเหนือ"];
+
 export class EReportClient {
   private readonly session = new CookieHttpSession(appConfig.eReportBaseUrl);
 
@@ -68,7 +70,13 @@ export class EReportClient {
   }
 
   public async fetchNewRequests(domain: DomainName): Promise<SourceRecord[]> {
-    const path = domain === "water" ? "/administrativeWater.php" : "/administrativeAir.php";
+    const DOMAIN_REQUEST_PATH: Record<string, string> = {
+      water: "/administrativeWater_all.php",
+      air:   "/administrativeAir_all.php",
+      soil:  "/administrativeSoil_all.php",
+      sewage: "/administrativeSewage_all.php"
+    };
+    const path = DOMAIN_REQUEST_PATH[domain] ?? `/administrative${domain}.php`;
     const html = await this.session.get(path);
     const tableHtml = extractTableById(html, "alternative-page-datatable");
     const rows = extractRows(tableHtml);
@@ -89,6 +97,7 @@ export class EReportClient {
         };
       })
       .filter((row) => appConfig.requestTriggerStatuses.includes(row.status))
+      .filter((row) => !EXCLUDED_ORGS.some((org) => row.requesterOrg.includes(org)))
       .map(normalizeRequestRow);
   }
 
@@ -97,7 +106,7 @@ export class EReportClient {
       action: "searchData",
       user_region_id: "2",
       year: getCurrentBuddhistYear(),
-      analysis_type_id: domain === "water" ? "1" : "27"
+      analysis_type_id: { water: "1", air: "27", soil: "9", sewage: "8" }[domain] ?? "1"
     });
 
     const searchJson = this.parseJson<{ status?: boolean; search_result: string }>(searchResponse, {
@@ -128,7 +137,8 @@ export class EReportClient {
           domain
         };
       })
-      .filter((row) => row.detailId && appConfig.resultTriggerStatuses.includes(row.status));
+      .filter((row) => row.detailId && appConfig.resultTriggerStatuses.includes(row.status))
+      .filter((row) => !EXCLUDED_ORGS.some((org) => row.requesterOrg.includes(org)));
 
     const records: SourceRecord[] = [];
     for (const row of rows) {

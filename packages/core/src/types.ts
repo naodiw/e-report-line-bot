@@ -1,5 +1,5 @@
 export type EntityType = "request" | "result";
-export type DomainName = "water" | "air";
+export type DomainName = "water" | "air" | "soil" | "sewage";
 export type TargetType = "user" | "group";
 export type EventType = "NEW_REQUEST" | "RESULT_COMPLETED" | "PENDING_MAPPING";
 
