@@ -56,6 +56,7 @@ export class NotificationOrchestrator {
     for (const event of events) {
       const overrideUserId = appConfig.customerNotifyOverrideUserId;
       let resolvedUserId: string;
+      let resolvedName: string = event.requesterName ?? "ลูกค้า";
       if (overrideUserId) {
         resolvedUserId = overrideUserId;
       } else {
@@ -82,6 +83,7 @@ export class NotificationOrchestrator {
           continue;
         }
         resolvedUserId = mapping.lineUserId;
+        resolvedName = mapping.lineDisplayName || mapping.requesterName;
       }
 
       const key = `${resolvedUserId}::${event.customerName ?? ""}`;
@@ -92,7 +94,7 @@ export class NotificationOrchestrator {
             userId: resolvedUserId,
             groupId: null,
             enabled: true,
-            name: mapping.lineDisplayName || mapping.requesterName,
+            name: resolvedName,
             eventTypes: ["RESULT_COMPLETED"]
           },
           events: []
