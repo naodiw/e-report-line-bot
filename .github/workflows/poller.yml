@@ -38,4 +38,5 @@ jobs:
           RESULT_TRIGGER_STATUSES: ${{ secrets.RESULT_TRIGGER_STATUSES }}
           STAFF_NOTIFY_ENABLED: ${{ secrets.STAFF_NOTIFY_ENABLED }}
           CUSTOMER_NOTIFY_ENABLED: ${{ secrets.CUSTOMER_NOTIFY_ENABLED }}
+          CUSTOMER_NOTIFY_OVERRIDE_USER_ID: ${{ secrets.CUSTOMER_NOTIFY_OVERRIDE_USER_ID }}
         run: node dist/apps/poller/src/index.js

@@ -2,7 +2,7 @@ import type { NotificationEvent, SourceRecord } from "./types.js";
 
 export const buildNewRequestEvent = (record: SourceRecord): NotificationEvent => ({
   eventType: "NEW_REQUEST",
-  dedupeKey: `NEW_REQUEST:${record.requestNo ?? record.externalId ?? `${record.submittedAt}:${record.requesterName}`}`,
+  dedupeKey: `NEW_REQUEST:${record.requestNo || record.externalId || `${record.submittedAt}:${record.requesterName}`}`,
   externalId: record.externalId,
   requestNo: record.requestNo,
   customerCode: record.customerCode,
@@ -24,7 +24,7 @@ export const buildNewRequestEvent = (record: SourceRecord): NotificationEvent =>
 
 export const buildResultCompletedEvent = (record: SourceRecord): NotificationEvent => ({
   eventType: "RESULT_COMPLETED",
-  dedupeKey: `RESULT_COMPLETED:${record.requestNo ?? "unknown"}:${record.reportNo ?? record.sampleId ?? record.externalId}`,
+  dedupeKey: `RESULT_COMPLETED:${record.requestNo || "unknown"}:${record.reportNo || record.sampleId || record.externalId}`,
   externalId: record.externalId,
   requestNo: record.requestNo,
   customerCode: record.customerCode,
