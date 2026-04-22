@@ -1,10 +1,9 @@
 name: Poller
 
 on:
-  schedule:
-    - cron: "30 1 * * *"     # 08:30 ICT — first run of day
-    - cron: "0,30 2-9 * * *" # every 30 min, 09:00-16:30 ICT (02:00-09:30 UTC)
-  workflow_dispatch: # allow manual run
+  # Scheduling handled by cron-job.org (reliable) via workflow_dispatch.
+  # GitHub's native schedule is unreliable on free tier (skips 80%+ of slots).
+  workflow_dispatch:
 
 jobs:
   poll:
